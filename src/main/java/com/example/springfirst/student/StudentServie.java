@@ -31,4 +31,14 @@ public class StudentServie {
 
 
     }
+
+
+    public void deleteStudent(Long id) {
+        boolean exists =repo.existsById(id);
+        if (!exists){
+            throw new IllegalStateException("no existing id  ");
+
+        }
+       repo.deleteById(id);
+    }
 }

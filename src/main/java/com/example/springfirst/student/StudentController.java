@@ -23,6 +23,10 @@ public class StudentController {
     public void registerNewStudent(@RequestBody Student student){
         ss.addNewStudent(student);
     }
+    @DeleteMapping(path="{id}")
+    public void deleteStudent(@PathVariable ("id") Long id ){
+       ss.deleteStudent(id);
+    }
     ///info ?
     //service layer
 }
