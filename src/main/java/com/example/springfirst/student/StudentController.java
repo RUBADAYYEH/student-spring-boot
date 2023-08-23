@@ -1,8 +1,9 @@
 package com.example.springfirst.student;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path="api/v1/student")
@@ -10,13 +11,17 @@ public class StudentController {
 
 
     private final StudentServie ss;
-
+@Autowired
     public StudentController(StudentServie ss) {
         this.ss = ss;
     }
      @GetMapping
-    public String info(){
+    public List<Student> info(){
         return ss.info();
+    }
+    @PostMapping
+    public void registerNewStudent(@RequestBody Student student){
+        ss.addNewStudent(student);
     }
     ///info ?
     //service layer
