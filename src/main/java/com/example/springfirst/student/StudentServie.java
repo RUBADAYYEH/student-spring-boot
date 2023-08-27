@@ -1,10 +1,13 @@
 package com.example.springfirst.student;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -40,5 +43,23 @@ public class StudentServie {
 
         }
        repo.deleteById(id);
+    }
+@Transactional
+    public void updateStudent(Long id, String name, String email) {
+        Student student =repo.findById(id).orElseThrow(() ->new IllegalStateException("Student with this id does nt exist"));
+
+        if (name !=null && name.length()>0 &&
+                !Objects.equals(student.getName(),name)){
+            student.setName(name);
+    }
+    if (email !=null && email.length()>0 &&
+            !Objects.equals(student.getEmail(),email)){
+        Optional<Student> sop=repo.findStudentByEmail(email);
+        if(sop.isPresent()){
+            throw new IllegalStateException("email already taken  taken");
+        }
+        student.setEmail(email);
+    }
+
     }
 }
