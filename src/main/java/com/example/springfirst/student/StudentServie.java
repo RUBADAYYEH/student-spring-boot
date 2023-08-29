@@ -19,6 +19,7 @@ public class StudentServie {
         this.repo = repo;
     }
 
+
     @GetMapping
     public List<Student> info(){
         return repo.findAll();
@@ -45,7 +46,7 @@ public class StudentServie {
        repo.deleteById(id);
     }
 @Transactional
-    public void updateStudent(Long id, String name, String email) {
+    public Student updateStudent(Long id, String name, String email) {
         Student student =repo.findById(id).orElseThrow(() ->new IllegalStateException("Student with this id does nt exist"));
 
         if (name !=null && name.length()>0 &&
@@ -56,10 +57,11 @@ public class StudentServie {
             !Objects.equals(student.getEmail(),email)){
         Optional<Student> sop=repo.findStudentByEmail(email);
         if(sop.isPresent()){
-            throw new IllegalStateException("email already taken  taken");
+            throw new IllegalStateException("email already  taken");
         }
         student.setEmail(email);
     }
+    return student;
 
     }
 }
