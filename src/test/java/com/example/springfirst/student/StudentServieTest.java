@@ -73,8 +73,8 @@ class StudentServieTest {
 
         //then
         assertThatThrownBy(()->ssUnderTest.addNewStudent(student))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("email taken");
+                .isInstanceOf(EmailTakenException.class)
+                .hasMessageContaining("Email Taken :(");
         verify(repo,never()).save(any());
 
     }
@@ -102,8 +102,8 @@ class StudentServieTest {
 
 
         assertThatThrownBy(()->ssUnderTest.deleteStudent(student.getId()))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("no existing id  ");
+                .isInstanceOf(NotExistingIdException.class)
+                .hasMessageContaining("USER ID NOT FOUND :(");
         verify(repo,never()).delete(any());
     }
     @Test
@@ -128,8 +128,8 @@ class StudentServieTest {
 
 
         assertThatThrownBy(()->ssUnderTest.updateStudent(student.getId(),"nnnn",null))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("Student with this id does nt exist");
+                .isInstanceOf(NotExistingIdException.class)
+                .hasMessageContaining("USER ID NOT FOUND :(");
 
     }
     @Test
@@ -154,8 +154,8 @@ class StudentServieTest {
 
 
         assertThatThrownBy(()->ssUnderTest.updateStudent(student.getId(),null,"nnnnnnnnn"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("Student with this id does nt exist");
+                .isInstanceOf(NotExistingIdException.class)
+                .hasMessageContaining("USER ID NOT FOUND :(");
 
     }
     @Test
@@ -170,8 +170,8 @@ class StudentServieTest {
 
         //then
         assertThatThrownBy(()->ssUnderTest.updateStudent(2L,null,"jllll.ad@gmail.com"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("email already  taken");
+                .isInstanceOf(EmailTakenException.class)
+                .hasMessageContaining("Email Taken :(");
 
 
     }

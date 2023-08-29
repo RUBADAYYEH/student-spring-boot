@@ -2,6 +2,8 @@ package com.example.springfirst.student;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -25,43 +27,58 @@ public class StudentServie {
         return repo.findAll();
     }
 
-    public void addNewStudent(Student student) {
+    public String addNewStudent(Student student) {
         System.out.println(student);
        Optional<Student> studentByEmail= repo.findStudentByEmail(student.getEmail());
         if (studentByEmail.isPresent()){
-            throw new IllegalStateException("email taken");
+            throw new EmailTakenException();
         }
+
        repo.save(student);
+        return "Student Added Successfully";
 
 
     }
 
 
-    public void deleteStudent(Long id) {
+    public String deleteStudent(Long id) {
         boolean exists =repo.existsById(id);
         if (!exists){
-            throw new IllegalStateException("no existing id  ");
+            throw new NotExistingIdException();
 
         }
        repo.deleteById(id);
+        return "DElETED";
     }
 @Transactional
-    public Student updateStudent(Long id, String name, String email) {
-        Student student =repo.findById(id).orElseThrow(() ->new IllegalStateException("Student with this id does nt exist"));
-
-        if (name !=null && name.length()>0 &&
-                !Objects.equals(student.getName(),name)){
-            student.setName(name);
+    public String updateStudent(Long id, String name, String email) {
+    Student student = repo.findById(id).orElse(null);
+    if (student==null){
+        throw new NotExistingIdException();
     }
-    if (email !=null && email.length()>0 &&
-            !Objects.equals(student.getEmail(),email)){
-        Optional<Student> sop=repo.findStudentByEmail(email);
-        if(sop.isPresent()){
-            throw new IllegalStateException("email already  taken");
+    else {
+
+    if (name != null && name.length() > 0 &&
+            !Objects.equals(student.getName(), name)) {
+        student.setName(name);
+
+    }
+    if (email != null && email.length() > 0 &&
+            !Objects.equals(student.getEmail(), email)) {
+        Optional<Student> sop = repo.findStudentByEmail(email);
+        if (sop.isPresent()) {
+
+            throw new EmailTakenException();
+
         }
         student.setEmail(email);
-    }
-    return student;
+
 
     }
+    repo.save(student);
+    return "Record updated Successfully";}
+}
+
+
+
 }
